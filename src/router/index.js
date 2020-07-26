@@ -431,16 +431,16 @@ export const asyncRoutes = [{
             	},
                 hidden:true
             },
-            {
-            	path: 'propertyValues/:id(\\d+)',
-            	component: () => import('@/views/goods/propertyValues'),
-            	name: 'propertyValues',
-            	meta: {
-            		title: '商品规格价格',
-            		roles: ['admin']
-            	},
-                hidden:true
-            },
+            // {
+            // 	path: 'propertyValues/:id(\\d+)',
+            // 	component: () => import('@/views/goods/propertyValues'),
+            // 	name: 'propertyValues',
+            // 	meta: {
+            // 		title: '商品规格价格',
+            // 		roles: ['admin']
+            // 	},
+            //     hidden:true
+            // },
 			{
 				path: 'groupGoods',
 				component: () => import('@/views/goods/groupGoods'),
