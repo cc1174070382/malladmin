@@ -28,7 +28,7 @@
             </el-table-column>
             <el-table-column label="所属门店" align="center">
                 <template slot-scope="{row}">
-                    <span>{{ row.storeId }}</span>
+                    <span>{{ row.stores.storeName }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="商品图片" align="center">
@@ -108,13 +108,14 @@
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
             @pagination="getList" />
 
-        <add :dialogFormVisible="dialogFormVisible" @operOialog="operOialog"></add>
+        <add :dialogFormVisible="dialogFormVisible" @operOialog="operOialog" :goods="selGoods"></add>
     </div>
 </template>
 
 <script>
     import Pagination from '@/components/Pagination'
     import add from './good_add.vue'
+    import { getrecGoods } from '@/api/goods.js'
 
     export default {
         name: 'ComplexTable',
@@ -127,6 +128,7 @@
                 list: null,
                 total: 0,
                 listLoading: true,
+                selGoods:null,
                 listQuery: {
                     page: 1,
                     goodsName: ''
@@ -150,62 +152,70 @@
 
             },
             getList() {
-                this.listLoading = true
-                var obj = {
-                    goodsId: 1,
-                    goodsName: '大白菜',
-                    goodsDesc: '',
-                    goodsCategoryId: '1',
-                    storeId: 1,
-                    goodsImg: 'http://cs.hfzyycb.com/resources/picture/f3ccdd27d2000e3f9255a7e3e2c48800.jpeg',
-                    isSeckill: 1,
-                    isSale: 1,
-                    isBest: 1,
-                    isHot: 1,
-                    isNew: 1,
-                    isRecom: 1,
-                    showType: 1,
-                    goodsCatIdPath: '',
-                    goodsCatId: 1,
-                    goodsStatus: 1,
-                    saleNum: 1,
-                    goodsContents: '',
-                    visitNum: 234,
-                    appraiseNum: 234,
-                    isSpec: 0,
-                    goodsSeoKeywords: '',
-                    illegalRemarks: '',
-                    goodPrint: '',
-                    goodsType: 0,
-                    isDistribut: 0,
-                    commission: 560,
-                    isFreeShipping: 0,
-                    goodsSerachKeywords: '',
-                    shippingFeeType: 1,
-                    goodsWeight: 23,
-                    goodsVolume: 2,
-                    deliverType: 0,
-                    goodsPrice: 100,
-                    goodsVipPrice: 50,
-                    goodsSellPrice: 80,
-                    goodsSort: 0,
-                    saleTime: '2020-07-30 12:23:34',
-                    createTime: '2020-07-08 12:23:34',
-                }
-                var list = []
-                for (var i = 0; i < 10; i++) {
-                    list.push(obj);
-                }
-                var that = this;
-                setTimeout(function() {
-                    that.list = list
-                    that.total = 100;
-                    that.listLoading = false;
-                }, 1000)
+                this.listLoading = true;
+                getallgoods().then(res => {
+                    this.listLoading = false;
+                    this.list = res.data;
+                    this.total = res.total;
+                })
+
+                // this.listLoading = true
+                // var obj = {
+                //     goodsId: 1,
+                //     goodsName: '大白菜',
+                //     goodsDesc: '',
+                //     goodsCategoryId: '1',
+                //     storeId: 1,
+                //     goodsImg: 'http://cs.hfzyycb.com/resources/picture/f3ccdd27d2000e3f9255a7e3e2c48800.jpeg',
+                //     isSeckill: 1,
+                //     isSale: 1,
+                //     isBest: 1,
+                //     isHot: 1,
+                //     isNew: 1,
+                //     isRecom: 1,
+                //     showType: 1,
+                //     goodsCatIdPath: '',
+                //     goodsCatId: 1,
+                //     goodsStatus: 1,
+                //     saleNum: 1,
+                //     goodsContents: '',
+                //     visitNum: 234,
+                //     appraiseNum: 234,
+                //     isSpec: 0,
+                //     goodsSeoKeywords: '',
+                //     illegalRemarks: '',
+                //     goodPrint: '',
+                //     goodsType: 0,
+                //     isDistribut: 0,
+                //     commission: 560,
+                //     isFreeShipping: 0,
+                //     goodsSerachKeywords: '',
+                //     shippingFeeType: 1,
+                //     goodsWeight: 23,
+                //     goodsVolume: 2,
+                //     deliverType: 0,
+                //     goodsPrice: 100,
+                //     goodsVipPrice: 50,
+                //     goodsSellPrice: 80,
+                //     goodsSort: 0,
+                //     saleTime: '2020-07-30 12:23:34',
+                //     createTime: '2020-07-08 12:23:34',
+                // }
+                // var list = []
+                // for (var i = 0; i < 10; i++) {
+                //     list.push(obj);
+                // }
+                // var that = this;
+                // setTimeout(function() {
+                //     that.list = list
+                //     that.total = 100;
+                //     that.listLoading = false;
+                // }, 1000)
 
             },
-            handleCreate() {
-                this.dialogFormVisible = true
+            handleCreate(data) {
+                this.dialogFormVisible = true;
+                this.selGoods = data;
             },
             handleDelete(row, index) {
                 this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
